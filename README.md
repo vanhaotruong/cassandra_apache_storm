@@ -11,6 +11,8 @@
 
 # cd to working folder:
 - In terminal: cd "path/to/this_folder"
+- Go to "./src/spouts.py", modify the "csv_file_path" in "Wind_Spout" and "Weather_Spout". These 2 spouts are reading line by line from the *.csv file
+
 # Run cassandra:
 - In terminal: "sudo docker compose up -d "
 

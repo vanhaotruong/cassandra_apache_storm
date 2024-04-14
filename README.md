@@ -26,6 +26,7 @@
 - Open webbrowser, key in "localhost:8080", you should see the storm ui
 
 # Create empty table for cassandra by running all command in "de_project.cql"
+- In terminal: "cqlsh" > After that in cqlsh command window, key in "exit"
 - In terminal: "python3 create_table.py"
 - In terminal:
     - To check any topology is running: "storm list"

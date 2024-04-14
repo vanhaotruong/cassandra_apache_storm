@@ -1,6 +1,6 @@
 DROP KEYSPACE IF EXISTS iotsolution;
-
-CREATE KEYSPACE iotsolution
+  
+CREATE KEYSPACE IF NOT EXISTS iotsolution
 WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};
 
 USE iotsolution;

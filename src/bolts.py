@@ -76,10 +76,9 @@ class Wind_Silver_Bolt(Bolt):
 
     def process(self, tup):
         angle, device_id, recorded_date, rpm, window = tup.values
-
         angle = float(angle)
         device_id = str(device_id)
-        recorded_date = str(recorded_date) # recorded_date emit from *_Brone_Bolt is string with format '%Y-%m-%d', so we need to convert to datetime and modify format
+        recorded_date = str(recorded_date) 
         rpm = float(rpm)
         window = datetime.strptime(window, '%Y-%m-%d %H:%M:%S')
         window_hourly = window.strftime('%Y-%m-%dT%H')
@@ -93,10 +92,6 @@ class Wind_Silver_Bolt(Bolt):
         self.data[key]['rpm_count'] += 1
         avg_angle = self.data[key]['angle_sum'] / self.data[key]['angle_count']
         avg_rpm = self.data[key]['rpm_sum'] / self.data[key]['rpm_count']
-
-        self.logger.info(f"device_id: {device_id}, window_hourly: {window_hourly}, avg_angle: {avg_angle}, avg_rpm: {avg_rpm}")
-
-
 
         id = uuid.uuid4()
         query = "INSERT INTO wind_silver_table (id, device_id, window_hourly, avg_angle, avg_rpm) VALUES (%s, %s, %s, %s, %s)"
@@ -159,7 +154,6 @@ class Golden_Bolt(Bolt):
         self.data = {}
         self.cluster = Cluster(['127.0.0.1'])
         self.session = self.cluster.connect('iotsolution')
-
         self.wind_data = {}
         self.weather_data = {}
 
@@ -179,17 +173,13 @@ class Golden_Bolt(Bolt):
         if key in self.wind_data and key in self.weather_data:
             merged_data = key + self.wind_data[key] + self.weather_data[key]
             device_id, window_hourly, avg_angle, avg_rpm, avg_temperature, avg_humidity, avg_windspeed = merged_data
-
-            self.logger.info(f'merge_data: {merged_data}')
-
             # Insert merged_data into Cassandra
             id = uuid.uuid4()
             query = SimpleStatement(
                 "INSERT INTO golden_table (id, device_id, window_hourly, avg_angle, avg_rpm, avg_temperature, avg_humidity, avg_windspeed) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
                 consistency_level=ConsistencyLevel.ONE
             )
-            self.session.execute(query, (id, device_id, window_hourly, avg_angle, avg_rpm, avg_temperature, avg_humidity, avg_windspeed))
-      
+            self.session.execute(query, (id, device_id, window_hourly, avg_angle, avg_rpm, avg_temperature, avg_humidity, avg_windspeed))      
 
     def cleanup(self):
         self.cluster.shutdown()

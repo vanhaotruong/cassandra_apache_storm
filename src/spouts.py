@@ -1,5 +1,5 @@
 from streamparse import Spout
-import csv, os
+import csv, os, time
 import shutil
 
 class Wind_Spout(Spout):
@@ -19,6 +19,7 @@ class Wind_Spout(Spout):
             line = next(self.reader)
             angle, device_id, recorded_date, rpm, window = line
             self.emit([angle, device_id, recorded_date, rpm, window])
+            time.sleep(0.2)
         except StopIteration:
             self.file.close()
 
@@ -42,6 +43,7 @@ class Weather_Spout(Spout):
             line = next(self.reader)
             device_id, humidity, recorded_date, temperature, winddirection, window, windspeed = line
             self.emit([device_id, humidity, recorded_date, temperature, winddirection, window, windspeed])
+            time.sleep(0.2)
         except StopIteration:
             self.file.close()
 
